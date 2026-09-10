@@ -58,28 +58,29 @@
                 .join(' ');
         }
 
-        function decodeText(text) {
-            text += ' ';
+		function decodeText(text) {
+			text = text.replaceAll('*', '');
+			text += ' ';
 
-            let output = '';
-            let buffer = '';
-            const chars = [...text];
+			let output = '';
+			let buffer = '';
+			const chars = [...text];
 
-            for (let i = 0; i < chars.length; i++) {
-                buffer += chars[i];
+			for (let i = 0; i < chars.length; i++) {
+				buffer += chars[i];
 
-                if (buffer in meowToChar) {
-                    output += meowToChar[buffer];
-                    buffer = '';
-                    i++;
-                }
-            }
+				if (buffer in meowToChar) {
+					output += meowToChar[buffer];
+					buffer = '';
+					i++;
+				}
+			}
 
-            if (buffer !== '')
-                throw new Error(`Could not decode "${buffer}"`);
+			if (buffer !== '')
+				throw new Error(`Could not decode "${buffer}"`);
 
-            return output;
-        }
+			return output;
+		}
 
         function encode() {
             const input = document.getElementById('input').value;

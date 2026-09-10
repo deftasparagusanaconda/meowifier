@@ -9,7 +9,7 @@ def chars_to_meows(chars: str) -> str:
     return ' '.join(char_to_meow.get(char, char) for char in chars)
 
 def meows_to_chars(meows: str) -> str:
-    meows.replace('*', '')
+    meows = meows.replace('*', '')
     meows += ' ' # so the last next(it) wont trigger a StopIteration
     output = ''
     buffer = ''
