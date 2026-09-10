@@ -1,69 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meowifier</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>meowifier</title>
+
+	<style>
+		body {
+			font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+		}
+
+		h1 {
+			text-align: center;
+		}
+
+		.boxes {
+			display: flex;
+			gap: 0;
+			height: 250px;
+			width: 100%;
+		}
+
+		textarea {
+			box-sizing: border-box;
+			width: 100%;
+			resize: vertical;
+			font: inherit;
+		}
+
+		.boxes textarea {
+			flex: 1;
+			min-width: 0;
+		}
+
+		#codebook {
+			height: 250px;
+			margin-top: 1em;
+		}
+
+		footer p {
+			text-align: right;
+		}
+	</style>
 </head>
 
 <body>
-    <h1>🐈 Meowifier</h1>
-    <p>Turn text into meows. Turn meows back into text.</p>
+	<header>
+		<h1>meowifier</h1>
+	</header>
 
-    <textarea id="input" rows="10" cols="60"
-        placeholder="Type something..."></textarea>
+	<main>
+		<div class="boxes">
+			<textarea id="text" placeholder="blah blah blah"></textarea>
+			<textarea id="meows" placeholder="meow meow meow"></textarea>
+		</div>
 
-    <br><br>
+		<textarea id="codebook">  meow
+e *cuddles*
+t *tail wiggles*
+a bonk
+o -w-
+i silly willy
+n omg!!
+s eepy~
+h *smoochies*
+r *zoomies*
+d wuvwy
+l :}
+c *head pats*
+u >.<
+m *zzz*
+w nyaa~
+f ;D
+g awooo
+y ^o^
+p *poke*
+b weee!!
+v :P
+k RAWRRR
+j ^.^
+x *pets*
+q mroww
+z :)
+E *hug*
+T ^v^
+A luvly
+O smol.
+I fren.
+N bean.
+S :3
+H pookie
+R owo
+D eepy weepy
+L uwu
+C ^w^
+U *head rubs*
+M >w<
+W squee
+F hehe
+G UwU
+Y >//<
+P =w=
+B floof
+V =u=
+K :>
+J >v<
+X ;3
+Q *ear scritchies*
+Z ^~^
+0 ily <3
+1 *chin rubs*
+2 cutie
+3 wooo!!
+4 OwO
+5 eep!!
+6 yayy!!
+7 ;)
+8 blep
+9 XD
+. *mwah*
+, mrrp
+( heart <3
+) nomnom
+! -u-
+? *scritchies*
+' *nuzzles*
+" *kissies*
+: ^-^
+; yippee!!
+# mlem
+$ >o<
+% -v-
+& ^u^
++ *hisss*
+- *snuggles*
+* mew
+/ =v=
+< *belly rubs*
+= *wiggles*
+> *boop*
+@ honeybun
+[ teehee
+\ :D
+] >\\<
+^ >u<
+_ *purr*
+` *pat*
+{ good kitty
+| qt3.14
+} wawa
+~ wiwi</textarea>
+	</main>
 
-    <button onclick="encode()">Meowify!</button>
-    <button onclick="decode()">Demowify!</button>
+	<footer>
+		<p>
+			made by <a href="https://github.com/deftasparagusanaconda">daa</a>
+		</p>
+	</footer>
 
-    <br><br>
+	<script>
+		let charToMeow;
+		let meowToChar;
 
-    <textarea id="output" rows="10" cols="60"
-        placeholder="Your result will appear here..." readonly></textarea>
+		const text = document.getElementById('text');
+		const meowsBox = document.getElementById('meows');
+		const codebook = document.getElementById('codebook');
 
-    <script>
-        const chars = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
+		function rebuildMaps() {
+			charToMeow = {};
+			meowToChar = {};
 
-        const meows = [
-            'bonk', '*cuddles*', '*tail wiggles*', '-w-', 'silly willy', '',
-            'omg!!', 'eepy~', '*smoochies*', '*zoomies*', 'wuvwy', ':}',
-            '*head pats*', '>.<', '*zzz*', 'nyaa~', ';D', 'awooo', '^o^',
-            '*poke*', 'weee!!', ':P', 'RAWRRR', '^.^', '*pets*', 'mroww',
-            ':)', 'qt3.14', 'meow', '*hug*', '^v^', 'luvly', 'smol.', 'fren.',
-            'bean.', ':3', 'pookie', 'owo', 'eepy weepy', 'uwu', '^w^',
-            '*head rubs*', '>w<', 'squee', 'hehe', 'UwU', '>//<', '=w=',
-            'floof', '=u=', ':>', '>v<', ';3', '*ear scritchies*', '^~^',
-            'ily<3', '*chin rubs*', 'cutie', 'wooo!!', 'OwO', 'eep!!',
-            'yayy!!', ';)', 'blep', 'XD', '*mwah*', 'mrrp', 'heart<3',
-            'nomnom', '-u-', '*scritchies*', '*nuzzles*', '*kissies*', '^-^',
-            '  ', 'yippee!!', 'mlem', '>o<', '-v-', '^u^', '*hisss*',
-            '*snuggles*', 'mew', '=v=', '*belly rubs*', '*wiggles*',
-            '*boop*', 'my 100/10', 'teehee', ':D', '>\\<', '>u<', '*purr*',
-            '*pat*', 'good kitty'
-        ];
+			for (const line of codebook.value.split('\n')) {
+				const char = line[0] || ' ';
+				const meow = line.slice(2);
 
-        const charToMeow = Object.fromEntries(
-            chars.split('').map((char, i) => [char, meows[i]])
-        );
+				if (!meow) continue;
 
-        const meowToChar = Object.fromEntries(
-            meows.map((meow, i) => [meow.replaceAll('*', ''), chars[i]])
-        );
+				charToMeow[char] = meow;
+				meowToChar[meow.replaceAll('*', '')] = char;
+			}
+		}
 
-        function encodeText(text) {
-            return [...text]
-                .map(char => charToMeow[char] ?? char)
-                .join(' ');
-        }
+		function charsToMeows(text) {
+			return [...text]
+				.map(char => charToMeow[char] ?? char)
+				.join(' ');
+		}
 
-		function decodeText(text) {
-			text = text.replaceAll('*', '');
-			text += ' ';
+		function meowsToChars(text) {
+			text = text.replaceAll('*', '') + ' ';
 
 			let output = '';
 			let buffer = '';
+
 			const chars = [...text];
 
 			for (let i = 0; i < chars.length; i++) {
@@ -82,20 +211,24 @@
 			return output;
 		}
 
-        function encode() {
-            const input = document.getElementById('input').value;
-            document.getElementById('output').value = encodeText(input);
-        }
+		rebuildMaps();
 
-        function decode() {
-            const input = document.getElementById('input').value;
+		text.addEventListener('input', () => {
+			meowsBox.value = charsToMeows(text.value);
+		});
 
-            try {
-                document.getElementById('output').value = decodeText(input);
-            } catch (error) {
-                document.getElementById('output').value = error.message;
-            }
-        }
-    </script>
+		meowsBox.addEventListener('input', () => {
+			try {
+				text.value = meowsToChars(meowsBox.value);
+			} catch {
+				text.value = '';
+			}
+		});
+
+		codebook.addEventListener('input', () => {
+			rebuildMaps();
+			meowsBox.value = charsToMeows(text.value);
+		});
+	</script>
 </body>
 </html>
