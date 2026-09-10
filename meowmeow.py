@@ -1,48 +1,29 @@
-letter_to_meow = dict(zip('etaoinshrdlcumwfgypbvkjxqz', [
-    # U
-    # :3
-    'meow','meoww','mmeow', 
-    'mreow','mreoww','mmreow',
+chars = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'
 
-    # I
-    # you got heart, kid
-    'mew','meww',
-    'mrew','mreww','mmrew',
+meows = ['bonk', '*cuddles*', '*tail wiggles*', '-w-', 'silly willy', '', 'omg!!', 'eepy~', '*smoochies*', '*zoomies*', 'wuvwy', ':}', '*head pats*', '>.<', '*zzz*', 'nyaa~', ';D', 'awooo', '^o^', '*poke*', 'weee!!', ':P', 'RAWRRR', '^.^', '*pets*', 'mroww', ':)', 'qt3.14', 'meow', '*hug*', '^v^', 'luvly', 'smol.', 'fren.', 'bean.', ':3', 'pookie', 'owo', 'eepy weepy', 'uwu', '^w^', '*head rubs*', '>w<', 'squee', 'hehe', 'UwU', '>//<', '=w=', 'floof', '=u=', ':>', '>v<', ';3', '*ear scritchies*', '^~^', 'ily<3', '*chin rubs*', 'cutie', 'wooo!!', 'OwO', 'eep!!', 'yayy!!', ';)', 'blep', 'XD', '*mwah*', 'mrrp', 'heart<3', 'nomnom', '-u-', '*scritchies*', '*nuzzles*', '*kissies*', '^-^', '  ', 'yippee!!', 'mlem', '>o<', '-v-', '^u^', '*hisss*', '*snuggles*', 'mew', '=v=', '*belly rubs*', '*wiggles*', '*boop*', 'my 100/10', 'teehee', ':D', '>\\<', '>u<', '*purr*', '*pat*', 'good kitty']
 
-    # E
-    # hewwpp :(
-    'meu','meuu','mmeu',
-    'mreu','mreuu','mmreu',
+char_to_meow = dict(zip(chars, meows, strict=True))
+meow_to_char = dict(zip([meow.replace('*', '') for meow in meows], chars, strict=True))
 
-    # A
-    # how is a nigga gon borrow a fry? nigga is u gon give it back?
-    'mao','maoo','mmao',
-    # eyebrow, drown
-    'mrow','mroww','mmrow',
+def chars_to_meows(chars: str) -> str:
+    return ' '.join(char_to_meow.get(char, char) for char in chars)
 
-    # O
-    # row row row ur boat
-    'mow','moww','mmow', 
-]))
+def meows_to_chars(meows: str) -> str:
+    meows.replace('*', '')
+    meows += ' ' # so the last next(it) wont trigger a StopIteration
+    output = ''
+    buffer = ''
 
-meow_to_letter = {value: key for key, value in letter_to_meow.items()}
-
-import re
-'''
-word_lexer = re.compile(r'[a-z]+|[^a-z]+')
-meow_lexer = re.compile(r'[a-z]+|[^a-z]+')
-
-def words_to_meows(words):
-    return ''.join('-'.join(letter_to_meow[letter] for letter in token) if token.isalpha() else token for token in word_lexer.findall(words.lower().replace('-', '--')))
-
-def meows_to_words(meows):
-    return ''.join(''.join(meow_to_letter[meow] for meow in token.split('-')) if token.isalpha() else token for token in meow_lexer.findall(meows.lower().replace('--', '-')))
-'''
-word_lexer = re.compile(r'[a-z]+|[^a-z]+')
-meow_lexer = re.compile(r'[a-z]+(?:-[a-z]+)*|--|[^a-z-]+|-')
-
-def words_to_meows(words):
-    return ''.join('-'.join(letter_to_meow[letter] for letter in token) if token.isalpha() else token.replace('-', '--') for token in word_lexer.findall(words.lower()))
-
-def meows_to_words(meows):
-    return ''.join(''.join(meow_to_letter[meow] for meow in token.split('-')) if token[0].isalpha() else '-' if token == '--' else token for token in meow_lexer.findall(meows.lower()))
+    it = iter(meows)  
+    for char in it:
+        buffer += char
+        
+        if buffer in meow_to_char:
+            output += meow_to_char[buffer]
+            buffer = ''
+            next(it)    # skip next char since every meow (except the last) is followed by a space
+    
+    if buffer != '':
+        raise Exception('could not decode', buffer)
+    
+    return output

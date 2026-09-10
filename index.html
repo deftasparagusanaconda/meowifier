@@ -1,4 +1,100 @@
-<!--words = ['the','be','to','of','and','a','in','that','have','I','it','for','not','on','with','he','as','you','do','at','this','but','his','by','from','they','we','say','her','she','or','an','will','my','one','all','would','there','their','what','so','up','out','if','about','who','get','which','go','me','when','make','can','like','time','no','just','him','know','take','people','into','year','your','good','some','could','them','see','other','than','then','now','look','only','come','its','over','think','also','back','after','use','two','how','our','work','first','well','way','even','new','want','because','any','these','give','day','most','us']-->
-<!--meows  -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meowifier</title>
+</head>
 
+<body>
+    <h1>🐈 Meowifier</h1>
+    <p>Turn text into meows. Turn meows back into text.</p>
 
+    <textarea id="input" rows="10" cols="60"
+        placeholder="Type something..."></textarea>
+
+    <br><br>
+
+    <button onclick="encode()">Meowify!</button>
+    <button onclick="decode()">Demowify!</button>
+
+    <br><br>
+
+    <textarea id="output" rows="10" cols="60"
+        placeholder="Your result will appear here..." readonly></textarea>
+
+    <script>
+        const chars = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
+
+        const meows = [
+            'bonk', '*cuddles*', '*tail wiggles*', '-w-', 'silly willy', '',
+            'omg!!', 'eepy~', '*smoochies*', '*zoomies*', 'wuvwy', ':}',
+            '*head pats*', '>.<', '*zzz*', 'nyaa~', ';D', 'awooo', '^o^',
+            '*poke*', 'weee!!', ':P', 'RAWRRR', '^.^', '*pets*', 'mroww',
+            ':)', 'qt3.14', 'meow', '*hug*', '^v^', 'luvly', 'smol.', 'fren.',
+            'bean.', ':3', 'pookie', 'owo', 'eepy weepy', 'uwu', '^w^',
+            '*head rubs*', '>w<', 'squee', 'hehe', 'UwU', '>//<', '=w=',
+            'floof', '=u=', ':>', '>v<', ';3', '*ear scritchies*', '^~^',
+            'ily<3', '*chin rubs*', 'cutie', 'wooo!!', 'OwO', 'eep!!',
+            'yayy!!', ';)', 'blep', 'XD', '*mwah*', 'mrrp', 'heart<3',
+            'nomnom', '-u-', '*scritchies*', '*nuzzles*', '*kissies*', '^-^',
+            '  ', 'yippee!!', 'mlem', '>o<', '-v-', '^u^', '*hisss*',
+            '*snuggles*', 'mew', '=v=', '*belly rubs*', '*wiggles*',
+            '*boop*', 'my 100/10', 'teehee', ':D', '>\\<', '>u<', '*purr*',
+            '*pat*', 'good kitty'
+        ];
+
+        const charToMeow = Object.fromEntries(
+            chars.split('').map((char, i) => [char, meows[i]])
+        );
+
+        const meowToChar = Object.fromEntries(
+            meows.map((meow, i) => [meow.replaceAll('*', ''), chars[i]])
+        );
+
+        function encodeText(text) {
+            return [...text]
+                .map(char => charToMeow[char] ?? char)
+                .join(' ');
+        }
+
+        function decodeText(text) {
+            text += ' ';
+
+            let output = '';
+            let buffer = '';
+            const chars = [...text];
+
+            for (let i = 0; i < chars.length; i++) {
+                buffer += chars[i];
+
+                if (buffer in meowToChar) {
+                    output += meowToChar[buffer];
+                    buffer = '';
+                    i++;
+                }
+            }
+
+            if (buffer !== '')
+                throw new Error(`Could not decode "${buffer}"`);
+
+            return output;
+        }
+
+        function encode() {
+            const input = document.getElementById('input').value;
+            document.getElementById('output').value = encodeText(input);
+        }
+
+        function decode() {
+            const input = document.getElementById('input').value;
+
+            try {
+                document.getElementById('output').value = decodeText(input);
+            } catch (error) {
+                document.getElementById('output').value = error.message;
+            }
+        }
+    </script>
+</body>
+</html>
