@@ -4,18 +4,15 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="icon" href="favicon.png" type="image/x-icon">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Comic+Relief&display=swap" rel="stylesheet">
 	<title>meowifier</title>
 
 	<style>
-		@font-face {
-			font-family: 'Comic Neue';
-			src: url('ComicNeue-Bold ASCII.woff2') format('woff2');
-			font-weight: 700;
-		}
-
 		body {
-			font-family: 'Comic Neue', sans-serif;
-			font-weight: 700;
+			font-family: 'Comic Relief', sans-serif;
+			font-weight: 400;
 		}
 
 		h1 {
@@ -24,15 +21,18 @@
 
 		.boxes {
 			display: flex;
-			gap: 0;
-			height: 250px;
-			width: 100%;
+			height: 75vh;
+		}
+
+		.text {
+			display: flex;
+			flex-direction: column;
+			flex: 3;
 		}
 
 		textarea {
 			box-sizing: border-box;
 			width: 100%;
-			resize: vertical;
 			font: inherit;
 		}
 
@@ -42,7 +42,7 @@
 		}
 
 		#codebook {
-			height: 250px;
+			
 		}
 
 		footer p {
@@ -58,11 +58,12 @@
 
 	<main>
 		<div class="boxes">
-			<textarea id="text" placeholder="blah blah blah"></textarea>
-			<textarea id="meows" placeholder="meow meow meow"></textarea>
-		</div>
-
-		<textarea id="codebook">  meow
+			<div class="text">
+				<textarea id="text" placeholder="blah blah blah"></textarea>
+				<textarea id="meows" placeholder="meow meow meow"></textarea>
+			</div>
+		
+			<textarea id="codebook">  meow
 e *purr*
 t nyaa~
 a :3
@@ -107,7 +108,7 @@ I :>
 N ^~^
 S *chin rubs*
 H cutie
-R OwO
+wR OwO
 D *belly rubs*
 L yayy!!
 C heart <3
@@ -157,6 +158,7 @@ _ good kitty
 | teehee
 } wiwi
 ~ wawa</textarea>
+		</div>
 	</main>
 
 	<footer>
@@ -164,7 +166,7 @@ _ good kitty
 			made by <a href="https://github.com/deftasparagusanaconda">daa</a>
 		</p>
 	</footer>
-
+	
 	<script>
 		let charToMeow;
 		let meowToChar;
