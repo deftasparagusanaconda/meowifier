@@ -15,8 +15,24 @@
 			font-weight: 400;
 		}
 
+		body.light {
+			color-scheme: light;
+			background: white;
+			color: black;
+		}
+
+		body.dark {
+			color-scheme: dark;
+			background: black;
+			color: white;
+		}
+
 		h1 {
 			text-align: center;
+		}
+
+		#title{
+			cursor: pointer;
 		}
 
 		.boxes {
@@ -31,9 +47,21 @@
 		}
 
 		textarea {
+			background: white;
+			color: black;
 			box-sizing: border-box;
 			width: 100%;
 			font: inherit;
+		}
+
+		body.light textarea {
+			background: white;
+			color: black;
+		}
+
+		body.dark textarea {
+			background: black;
+			color: white;
 		}
 
 		.boxes textarea {
@@ -53,7 +81,7 @@
 
 <body>
 	<header>
-		<h1>meowifier</h1>
+		<h1><span id="title">meowifier</span></h1>
 	</header>
 
 	<main>
@@ -108,7 +136,7 @@ I :>
 N ^~^
 S *chin rubs*
 H cutie
-wR OwO
+R OwO
 D *belly rubs*
 L yayy!!
 C heart <3
@@ -237,6 +265,18 @@ _ good kitty
 		codebook.addEventListener('input', () => {
 			rebuildMaps();
 			meowsBox.value = charsToMeows(text.value);
+		});
+		const title = document.getElementById('title');
+
+		let theme = window.matchMedia('(prefers-color-scheme: dark)').matches
+			? 'dark'
+			: 'light';
+
+		document.body.className = theme;
+
+		title.addEventListener('click', () => {
+			theme = theme === 'light' ? 'dark' : 'light';
+			document.body.className = theme;
 		});
 	</script>
 </body>
